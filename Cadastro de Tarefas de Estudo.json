@@ -1,0 +1,154 @@
+{
+  "name": "Cadastro de Tarefas de Estudo",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Cadastro de Tarefas de Estudo",
+        "formDescription": "Preencha os campos abaixo para cadastrar e organizar suas tarefas de estudo.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nome da Tarefa"
+            },
+            {
+              "fieldLabel": "Matéria ou Curso"
+            },
+            {
+              "fieldLabel": "Prazo",
+              "fieldType": "date"
+            },
+            {
+              "fieldLabel": "E-mail de Destino",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -768,
+        -48
+      ],
+      "id": "eb6e65c8-85b0-4ca9-acc5-d9b68cd439db",
+      "name": "On form submission",
+      "webhookId": "4bfa9697-75aa-4c31-9b57-fd718a083886"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3b0da773-39b3-4dd4-af1f-7575174852a4",
+              "leftValue": "={{ $json['Nome da Tarefa'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "8c6bb3bc-a212-41f0-9a11-81ea94a818f0",
+              "leftValue": "={{ $json.Prazo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "dateTime",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d99d1f27-b064-459d-aa50-411e499abee9",
+              "leftValue": "={{ $json['E-mail de Destino'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -544,
+        -48
+      ],
+      "id": "e17d7fc0-5881-45c1-a773-1c899c1eb6e8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['E-mail de Destino'] }}",
+        "subject": "=Nova tarefa cadastrada:  {{ $json['Nome da Tarefa'] }}",
+        "message": "=Olá! Uma nova tarefa de estudo foi cadastrada com sucesso:\n\n- Tarefa: {{ $json['Nome da Tarefa'] }}\n- Matéria/Curso: {{ $json['Matéria ou Curso'] }}\n- Prazo: {{ $json['Prazo'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        -64
+      ],
+      "id": "f7e0287c-f0d2-4852-8a5f-3339779335a7",
+      "name": "Send a message",
+      "webhookId": "26e4a755-2518-4dd1-b8d8-65abb769c885",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "soL0SQSVsLCBq6dm",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3b5a2e4e-c958-4014-9b03-a1bbb5d39aa6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "44fbad7276baec5011182ebd2f751814882d3aa43cffce701a110408db656802"
+  },
+  "nodeGroups": [],
+  "id": "aOqA3ucLNCSxnWO4",
+  "tags": []
+}
